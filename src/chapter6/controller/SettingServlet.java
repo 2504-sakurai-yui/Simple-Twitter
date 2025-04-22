@@ -39,7 +39,7 @@ public class SettingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         HttpSession session = request.getSession();
@@ -66,7 +66,7 @@ public class SettingServlet extends HttpServlet {
             try {
                 new UserService().update(user);
             } catch (NoRowsUpdatedRuntimeException e) {
-		    log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+            	log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
                 errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
             }
         }
@@ -84,20 +84,20 @@ public class SettingServlet extends HttpServlet {
 
     private User getUser(HttpServletRequest request) throws IOException, ServletException {
 
-	  log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
         " : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
         User user = new User();
         user.setId(Integer.parseInt(request.getParameter("id")));
         user.setName(request.getParameter("name"));
         user.setAccount(request.getParameter("account"));
-        //user.setPassword(request.getParameter("password"));
         user.setEmail(request.getParameter("email"));
         user.setDescription(request.getParameter("description"));
 
+        String password = request.getParameter("password");
         //passwordに入力があればuserにセットする
-        if(request.getParameter("password") != null) {
-        	user.setPassword(request.getParameter("password"));
+        if(!StringUtils.isEmpty(password)) {
+        	user.setPassword(password);
         }
 
         return user;
