@@ -17,52 +17,56 @@ import chapter6.logging.InitApplication;
 
 public class UserMessageDao {
 	/**
-	  * ロガーインスタンスの生成
-	  */
+	 * ロガーインスタンスの生成
+	 */
 	Logger log = Logger.getLogger("twitter");
 
-    /**
-     * デフォルトコンストラクタ
-     * アプリケーションの初期化を実施する。
-     */
-    public UserMessageDao() {
-        InitApplication application = InitApplication.getInstance();
-        application.init();
-    }
+	/**
+	 * デフォルトコンストラクタ
+	 * アプリケーションの初期化を実施する。
+	 */
+	public UserMessageDao() {
+		InitApplication application = InitApplication.getInstance();
+		application.init();
+	}
 
-    public List<UserMessage> select(Connection connection, int num) {
+	public List<UserMessage> select(Connection connection, Integer id, int num) {
 
-    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-    	" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-    	PreparedStatement ps = null;
-        try {
-            StringBuilder sql = new StringBuilder();
-            sql.append("SELECT ");
-            sql.append("    messages.id as id, ");
-            sql.append("    messages.text as text, ");
-            sql.append("    messages.user_id as user_id, ");
-            sql.append("    users.account as account, ");
-            sql.append("    users.name as name, ");
-            sql.append("    messages.created_date as created_date ");
-            sql.append("FROM messages ");
-            sql.append("INNER JOIN users ");
-            sql.append("ON messages.user_id = users.id ");
-            sql.append("ORDER BY created_date DESC limit " + num);
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
 
-            ps = connection.prepareStatement(sql.toString());
+			sql.append("SELECT ");
+			sql.append("	messages.id as id, ");
+			sql.append("    messages.text as text, ");
+			sql.append("    messages.user_id as user_id, ");
+			sql.append("    users.account as account, ");
+			sql.append("    users.name as name, ");
+			sql.append("    messages.created_date as created_date ");
+			sql.append("FROM messages ");
+			sql.append("INNER JOIN users ");
+			sql.append("ON messages.user_id = users.id ");
+			if(id != null) {
+				sql.append("WHERE id = users.id ");
+			}
+			sql.append("ORDER BY created_date DESC limit " + num);
 
-            ResultSet rs = ps.executeQuery();
+			ps = connection.prepareStatement(sql.toString());
 
-            List<UserMessage> messages = toUserMessages(rs);
-            return messages;
-        } catch (SQLException e) {
+			ResultSet rs = ps.executeQuery();
+
+			List<UserMessage> messages = toUserMessages(rs);
+			return messages;
+		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-            throw new SQLRuntimeException(e);
-        } finally {
-            close(ps);
-        }
-    }
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
 
     private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 
@@ -82,37 +86,12 @@ public class UserMessageDao {
 
                 messages.add(message);
             }
+
             return messages;
         } finally {
             close(rs);
         }
     }
 
-    /**public List<UserMessage> select(Connection connection, int id, int num){
-
-    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-    	" : " + new Object(){}.getClass().getEnclosingMethod().getName());
-
-    	try {
-    		PreparedStatement ps = null;
-    		StringBuilder sql = new StringBuilder();
-    		sql.append("SELECT * FROM messages where user_id=?");
-    		ps = connection.prepareStatement(sql.toString());
-
-    		UserMessage message = new UserMessage();
-
-    		ResultSet rs = ps.executeQuery();
-
-    		List<UserMessage> messages = toUserMessages(rs);
-
-    		return messages;
-
-    	} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-            throw new SQLRuntimeException(e);
-        } finally {
-            close(ps);
-        }
-    }*/
 
 }

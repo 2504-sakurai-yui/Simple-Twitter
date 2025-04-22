@@ -16,14 +16,14 @@
 
 			<div class="header">
     			<c:if test="${ empty loginUser }">
-        			<a href="login">ログイン</a>
-        			<a href="signup">登録する</a>
-    			</c:if>
-    			<c:if test="${ not empty loginUser }">
-        			<a href="./">ホーム</a>
-        			<a href="setting">設定</a>
-        			<a href="logout">ログアウト</a>
-    			</c:if>
+					<a href="login">ログイン</a>
+					<a href="signup">登録する</a>
+				</c:if>
+				<c:if test="${ not empty loginUser }">
+					<a href="./">ホーム</a>
+					<a href="setting">設定</a>
+					<a href="logout">ログアウト</a>
+				</c:if>
 			</div>
 
 			<c:if test="${ not empty loginUser }">
@@ -49,9 +49,9 @@
         				<div class="message">
             				<div class="account-name">
                 				<span class="account">
-
+									<a href="./?user_id=<c:out value="${message.userId}"/> ">
                 						<c:out value="${message.account}" />
-
+									</a>
                 				</span>
                 				<span class="name"><c:out value="${message.name}" /></span>
             				</div>

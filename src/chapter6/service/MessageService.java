@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import chapter6.beans.Message;
 import chapter6.beans.UserMessage;
 import chapter6.dao.MessageDao;
@@ -52,49 +54,25 @@ public class MessageService {
         }
     }
 
-	public List<UserMessage> select() {
+	public List<UserMessage> select(String userId) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-	    " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-	    final int LIMIT_NUM = 1000;
-
-	    Connection connection = null;
-	    try {
-	        connection = getConnection();
-	        List<UserMessage> messages = new UserMessageDao().select(connection, LIMIT_NUM);
-	        commit(connection);
-
-	        return messages;
-	    } catch (RuntimeException e) {
-	        rollback(connection);
-	        log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw e;
-	    } catch (Error e) {
-	        rollback(connection);
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw e;
-	    } finally {
-	        close(connection);
-	    }
-	}
-
-	/*
-	 * selectの引数にString型のuserIdを追加
-	 */
-	/**public List<UserMessage> select(String userId) {
 		final int LIMIT_NUM = 1000;
 
 		Connection connection = null;
 		try {
 			connection = getConnection();
+
 			/*
 			 * idをnullで初期化
-			 * ServletからuserIdの値が渡ってきていたら整数型に型変換し、idに代入
+			 * ServletからuserIdの値が渡ってきていたら
+			 * 整数型に型変換し、idに代入
 			 */
-			/**Integer id = null;
+			Integer id = null;
 			if(!StringUtils.isEmpty(userId)) {
-	        id = Integer.parseInt(userId);
+				id = Integer.parseInt(userId);
 			}
 
 			/*
@@ -102,22 +80,22 @@ public class MessageService {
 			 * idがnullだったら全件取得する
 			 * idがnull以外だったら、その値に対応するユーザーIDの投稿を取得する
 			 */
-			/**if(id != null) {
 			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM);
-			commit(connection);
-			}
 
+			commit(connection);
+
+			return messages;
 		} catch (RuntimeException e) {
-	        rollback(connection);
-	        log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw e;
-	    } catch (Error e) {
-	        rollback(connection);
+			rollback(connection);
 			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-	        throw e;
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
 		} finally {
 			close(connection);
 		}
-	}*/
+	}
 
 }
