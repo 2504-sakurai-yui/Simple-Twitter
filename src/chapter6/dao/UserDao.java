@@ -31,13 +31,13 @@ public class UserDao {
 	 */
 	public UserDao(){
 		InitApplication application = InitApplication.getInstance();
-	    application.init();
+		application.init();
 	}
 
 	public void insert(Connection connection, User user) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-	    " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
 		PreparedStatement ps = null;
 
