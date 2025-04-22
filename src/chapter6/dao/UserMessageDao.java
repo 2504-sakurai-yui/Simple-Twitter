@@ -88,4 +88,31 @@ public class UserMessageDao {
         }
     }
 
+    /**public List<UserMessage> select(Connection connection, int id, int num){
+
+    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+    	" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+
+    	try {
+    		PreparedStatement ps = null;
+    		StringBuilder sql = new StringBuilder();
+    		sql.append("SELECT * FROM messages where user_id=?");
+    		ps = connection.prepareStatement(sql.toString());
+
+    		UserMessage message = new UserMessage();
+
+    		ResultSet rs = ps.executeQuery();
+
+    		List<UserMessage> messages = toUserMessages(rs);
+
+    		return messages;
+
+    	} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+            throw new SQLRuntimeException(e);
+        } finally {
+            close(ps);
+        }
+    }*/
+
 }

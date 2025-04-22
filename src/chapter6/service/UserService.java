@@ -118,7 +118,7 @@ public class UserService {
 
         Connection connection = null;
         try {
-            if(!StringUtils.isEmpty(user.getPassword())) {
+            if(!StringUtils.isBlank(user.getPassword())) {
             	// パスワード暗号化
             	String encPassword = CipherUtil.encrypt(user.getPassword());
             	user.setPassword(encPassword);

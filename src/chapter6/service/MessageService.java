@@ -79,4 +79,45 @@ public class MessageService {
 	    }
 	}
 
+	/*
+	 * selectの引数にString型のuserIdを追加
+	 */
+	/**public List<UserMessage> select(String userId) {
+		final int LIMIT_NUM = 1000;
+
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			/*
+			 * idをnullで初期化
+			 * ServletからuserIdの値が渡ってきていたら整数型に型変換し、idに代入
+			 */
+			/**Integer id = null;
+			if(!StringUtils.isEmpty(userId)) {
+	        id = Integer.parseInt(userId);
+			}
+
+			/*
+			 * messageDao.selectに引数としてInteger型のidを追加
+			 * idがnullだったら全件取得する
+			 * idがnull以外だったら、その値に対応するユーザーIDの投稿を取得する
+			 */
+			/**if(id != null) {
+			List<UserMessage> messages = new UserMessageDao().select(connection, id, LIMIT_NUM);
+			commit(connection);
+			}
+
+		} catch (RuntimeException e) {
+	        rollback(connection);
+	        log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+	        throw e;
+	    } catch (Error e) {
+	        rollback(connection);
+			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+	        throw e;
+		} finally {
+			close(connection);
+		}
+	}*/
+
 }
