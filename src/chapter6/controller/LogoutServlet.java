@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import chapter6.logging.InitApplication;
 
 @WebServlet(urlPatterns = { "/logout" })
-public class LogoutServlet extends HttpServlet{
+public class LogoutServlet extends HttpServlet {
 	/**
 	 * ロガーインスタンスの生成
 	 */
@@ -23,25 +23,25 @@ public class LogoutServlet extends HttpServlet{
 	 * デフォルトコンストラクタ
 	 * アプリケーションの初期化を実施する。
 	 */
-	public LogoutServlet(){
+	public LogoutServlet() {
 		InitApplication application = InitApplication.getInstance();
-	    application.init();
+		application.init();
 	}
 
 	private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
-        HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 
-        // セッションの無効化
-        session.invalidate();
-        response.sendRedirect("./");
-    }
+		// セッションの無効化
+		session.invalidate();
+		response.sendRedirect("./");
+	}
 
 }

@@ -17,7 +17,7 @@ import chapter6.service.MessageService;
 
 @WebServlet(urlPatterns = {"/index.jsp"})
 public class TopServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ロガーインスタンスの生成
@@ -36,24 +36,24 @@ public class TopServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
-		" : " + new Object() {}.getClass().getEnclosingMethod().getName());
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		boolean isShowMessageForm = false;
-        User user = (User) request.getSession().getAttribute("loginUser");
-        if (user != null) {
-            isShowMessageForm = true;
-        }
+		User user = (User) request.getSession().getAttribute("loginUser");
+		if (user != null) {
+			isShowMessageForm = true;
+		}
 
-        /*
-         * String型のuser_idの値をrequest.getParameter("user_id")で
-         * JSPから受け取るように設定
-         * MessageServiceのselectに引数としてString型のuser_idを追加
-         */
-        String userId = request.getParameter("user_id");
-        List<UserMessage> messages = new MessageService().select(userId);
+		/*
+		 * String型のuser_idの値をrequest.getParameter("user_id")で
+		 * JSPから受け取るように設定
+		 * MessageServiceのselectに引数としてString型のuser_idを追加
+		 */
+		String userId = request.getParameter("user_id");
+		List<UserMessage> messages = new MessageService().select(userId);
 
-        request.setAttribute("messages", messages);
-        request.setAttribute("isShowMessageForm", isShowMessageForm);
+		request.setAttribute("messages", messages);
+		request.setAttribute("isShowMessageForm", isShowMessageForm);
 		request.getRequestDispatcher("/top.jsp").forward(request,  response);
 	}
 }

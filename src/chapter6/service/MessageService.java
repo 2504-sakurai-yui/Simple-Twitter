@@ -28,36 +28,38 @@ public class MessageService {
 	 */
 	public MessageService() {
 		InitApplication application = InitApplication.getInstance();
-	    application.init();
+		application.init();
 	}
 
 	public void insert(Message message) {
-		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-		" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		Connection connection = null;
 
 		try {
-            connection = getConnection();
-            new MessageDao().insert(connection, message);
-            commit(connection);
-        } catch (RuntimeException e) {
-            rollback(connection);
-            log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-            throw e;
-        } catch (Error e) {
-            rollback(connection);
-            log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
-            throw e;
-        } finally {
-            close(connection);
-        }
-    }
+			connection = getConnection();
+			new MessageDao().insert(connection, message);
+			commit(connection);
+		} catch (RuntimeException e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} catch (Error e) {
+			rollback(connection);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw e;
+		} finally {
+			close(connection);
+		}
+	}
 
 	public List<UserMessage> select(String userId) {
 
-		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		final int LIMIT_NUM = 1000;
 
@@ -71,7 +73,7 @@ public class MessageService {
 			 * 整数型に型変換し、idに代入
 			 */
 			Integer id = null;
-			if(!StringUtils.isEmpty(userId)) {
+			if (!StringUtils.isEmpty(userId)) {
 				id = Integer.parseInt(userId);
 			}
 
@@ -85,13 +87,16 @@ public class MessageService {
 			commit(connection);
 
 			return messages;
+
 		} catch (RuntimeException e) {
 			rollback(connection);
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw e;
 		} catch (Error e) {
 			rollback(connection);
-			log.log(Level.SEVERE, new Object(){}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw e;
 		} finally {
 			close(connection);

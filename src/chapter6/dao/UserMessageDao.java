@@ -50,11 +50,15 @@ public class UserMessageDao {
 			sql.append("INNER JOIN users ");
 			sql.append("ON messages.user_id = users.id ");
 			if(id != null) {
-				sql.append("WHERE id = users.id ");
+				sql.append("WHERE user_id = ? ");
 			}
 			sql.append("ORDER BY created_date DESC limit " + num);
 
 			ps = connection.prepareStatement(sql.toString());
+
+			if(id != null) {
+				ps.setInt(1, id);
+			}
 
 			ResultSet rs = ps.executeQuery();
 
@@ -68,30 +72,29 @@ public class UserMessageDao {
 		}
 	}
 
-    private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
+	private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 
-    	log.info(new Object(){}.getClass().getEnclosingClass().getName() +
-        " : " + new Object(){}.getClass().getEnclosingMethod().getName());
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
-        List<UserMessage> messages = new ArrayList<UserMessage>();
-        try {
-            while (rs.next()) {
-                UserMessage message = new UserMessage();
-                message.setId(rs.getInt("id"));
-                message.setText(rs.getString("text"));
-                message.setUserId(rs.getInt("user_id"));
-                message.setAccount(rs.getString("account"));
-                message.setName(rs.getString("name"));
-                message.setCreatedDate(rs.getTimestamp("created_date"));
+		List<UserMessage> messages = new ArrayList<UserMessage>();
+		try {
+			while (rs.next()) {
+				UserMessage message = new UserMessage();
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setUserId(rs.getInt("user_id"));
+				message.setAccount(rs.getString("account"));
+				message.setName(rs.getString("name"));
+				message.setCreatedDate(rs.getTimestamp("created_date"));
 
-                messages.add(message);
-            }
+				messages.add(message);
+			}
 
-            return messages;
-        } finally {
-            close(rs);
-        }
-    }
-
+			return messages;
+		} finally {
+			close(rs);
+		}
+	}
 
 }
