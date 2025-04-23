@@ -40,7 +40,7 @@ public class UserMessageDao {
 			StringBuilder sql = new StringBuilder();
 
 			sql.append("SELECT ");
-			sql.append("	messages.id as id, ");
+			sql.append("    messages.id as id, ");
 			sql.append("    messages.text as text, ");
 			sql.append("    messages.user_id as user_id, ");
 			sql.append("    users.account as account, ");
