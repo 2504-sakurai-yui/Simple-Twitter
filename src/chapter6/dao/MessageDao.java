@@ -62,4 +62,30 @@ public class MessageDao {
 		}
 	}
 
+	public void delete(Connection connection, Message deleteMessage) {
+
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			//取得したメッセージのidに入っているレコードを消す
+			sql.append("DELETE FROM messages ");
+			sql.append("WHERE id = ?;");
+
+			ps = connection.prepareStatement(sql.toString());
+
+			ps.setInt(1, deleteMessage.getId());
+
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
 }
