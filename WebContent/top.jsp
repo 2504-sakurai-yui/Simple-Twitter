@@ -75,7 +75,7 @@
 								<input type="submit" value="削除" />
 							</form>
 						</div>
-						<div class="update">
+						<div class="edit">
 							<form action="edit" method="get">
 								<input type="hidden" name="edit" value="${message.id}"/>
 								<input type="submit" value="編集"/>

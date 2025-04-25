@@ -88,4 +88,61 @@ public class MessageDao {
 		}
 	}
 
+	public Message select(Connection connection, Message message) {
+
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			//取得したメッセージのidに入っているレコードを参照
+			sql.append("SELECT * FROM messages ");
+			sql.append("WHERE id = ?;");
+
+			ps = connection.prepareStatement(sql.toString());
+
+			ps.setInt(1, message.getId());
+
+			ps.executeQuery();
+
+			return (Message) ps;
+
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
+	public void update(Connection connection, Message message) {
+
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE messages SET ");
+			sql.append("    text = ?");
+			sql.append("WHERE id = ?;");
+
+			ps = connection.prepareStatement(sql.toString());
+
+			ps.setString(1, message.getText());
+			ps.setInt(2, message.getId());
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, new Object() {
+			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
 }
