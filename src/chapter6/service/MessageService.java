@@ -130,7 +130,7 @@ public class MessageService {
 		}
 	}
 
-	public Message select(Message message) {
+	public List<Message> editSelect(String edit) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
@@ -139,10 +139,15 @@ public class MessageService {
 
 		try {
 			connection = getConnection();
-			new MessageDao().select(connection, message);
+			//new MessageDao().editSelect(connection, message);
+
+			Integer id = null;
+			id = Integer.parseInt(edit);
+
+			List<Message> messages = new MessageDao().editSelect(connection, id);
 			commit(connection);
 
-			return message;
+			return messages;
 		} catch (RuntimeException e) {
 			rollback(connection);
 			log.log(Level.SEVERE, new Object() {

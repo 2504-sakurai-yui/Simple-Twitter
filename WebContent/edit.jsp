@@ -12,14 +12,31 @@
 
 	<body>
 		<div class="main-contents">
-			<form action="edit" method="post"><br />
-				<label for="edit">つぶやき</label>
-				<textarea id="edit" name="text" cols="100" rows="5"></textarea><br />
-				<input type="submit" value="更新"><br />
-				<a href="./">戻る</a>
-			</form>
 
-			<div class="copyright"> Copyright(c)Yui Sakurai</div>
+			<c:if test="${ not empty errorMessages }">
+				<div class="errorMessages">
+					<ul>
+						<c:forEach items="${errorMessages}" var="errorMessage">
+							<li><c:out value="${errorMessage}" />
+						</c:forEach>
+					</ul>
+				</div>
+			</c:if>
+			
+			<c:if test="${ empty errorMessages }">
+				<c:forEach items="${messages}" var="message">
+					<form action="edit" method="post"><br />
+						<label for="edit">つぶやき</label>
+							<input name="id" value="${message.id}" id="id" type="hidden"/>
+							<textarea name="text" cols="80" rows="5">${message.text}</textarea><br />
+							<input type="submit" value="更新"><br />
+						<a href="./">戻る</a>
+					</form>
+
+					<div class="copyright"> Copyright(c)Yui Sakurai</div>
+				</c:forEach>
+			</c:if>
+
 		</div>
 
 	</body>

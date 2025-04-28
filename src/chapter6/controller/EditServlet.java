@@ -1,6 +1,8 @@
 package chapter6.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -8,10 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 
 import chapter6.beans.Message;
-import chapter6.beans.User;
+import chapter6.exception.NoRowsUpdatedRuntimeException;
 import chapter6.logging.InitApplication;
 import chapter6.service.MessageService;
 
@@ -39,24 +42,46 @@ public class EditServlet extends HttpServlet{
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
-		//HttpSession session = request.getSession();
-		//Message edit = (Message) session.getAttribute("editMessage");
-
-		//Message message = new MessageService().select(editMessage);
-
-		//top.jspから編集したいメッセージのidを取得
+		//top.jspから編集したいメッセージidを取得
 		String edit = request.getParameter("edit");
 
 		//int intEdit = Integer.parseInt(edit);
 
-		Message message = new Message();
-		//message.setText(edit);
-		new MessageService().select(message);
+		//Message message = new Message();
+		//message.setId(intEdit);
+		List<Message> messages = new MessageService().editSelect(edit);
 
-		request.setAttribute("text", message);
+		request.setAttribute("messages", messages);
 
 		//編集画面に遷移する
 		request.getRequestDispatcher("edit.jsp").forward(request, response);
+
+		/**
+		 * //セッション作成
+		HttpSession session = request.getSession();
+		//top.jspからメッセージ取得
+		String edit = request.getParameter("edit");
+
+		Message editMessage = (Message) session.getAttribute("editMessage");
+		Message message = new MessageService().select2(editMessage.getId);
+		request.setAttribute("text", message);
+
+		//セッションにキー"edit"で取得したメッセージを入れる
+		session.setAttribute("edit", edit);
+
+		//Message edit = (Message) session.getAttribute("edit");
+		new MessageService().select2(edit);
+
+		request.getRequestDispatcher("edit.jsp").forward(request, response);*/
+
+
+		/**HttpSession session = request.getSession();
+
+		Message editMessage = (Message) session.getAttribute("editMessage");
+		Message message = new MessageService().select2(editMessage.getId());
+		request.setAttribute("text", message);
+		request.getRequestDispatcher("edit.jsp").forward(request, response);*/
+
 
 	}
 
@@ -67,33 +92,67 @@ public class EditServlet extends HttpServlet{
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
-		HttpSession session = request.getSession();
-		Message message = new Message();
-		
-		//新しく入力されたメッセージ取得
-		String text = request.getParameter("text");
-		message.setText(text);
+		Message message = getMessage(request);
+		List<String> errorMessages = new ArrayList<String>();
 
-		//loginUserからID取得
-		User user = (User) session.getAttribute("loginUser");
-		message.setId(user.getId());
+		if (isValid(message, errorMessages)) {
+			try {
+				new MessageService().update(message);
+			} catch (NoRowsUpdatedRuntimeException e) {
+				log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+				errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+			}
+		}
 
-		new MessageService().update(message);
+		if (errorMessages.size() != 0) {
+			request.setAttribute("errorMessages", errorMessages);
+			request.setAttribute("messages", message);
+			request.getRequestDispatcher("edit.jsp").forward(request, response);
+			return;
+		}
+
+		request.setAttribute("messages", message);
 
 		response.sendRedirect("./");
 
 	}
 
+	//新しく入力されたメッセージ情報取得
 	private Message getMessage(HttpServletRequest request) throws IOException, ServletException {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		Message message = new Message();
-		message.setText(request.getParameter("edit"));
+		message.setId(Integer.parseInt(request.getParameter("id")));
+		message.setText(request.getParameter("text"));
 
 		//新しく入力されたメッセージを返す
 		return message;
+	}
+
+	private boolean isValid(Message message, List<String> errorMessages) {
+
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
+
+		String text = message.getText();
+		//User existAccount = new UserService().select(account);
+		//String a = new UserService().insert(user).getAccount();
+		int id = message.getId();
+
+		if (!StringUtils.isEmpty(text) && (140 < text.length())) {
+			errorMessages.add("140文字以下で入力してください");
+		}
+
+		if (StringUtils.isBlank(text)) {
+			errorMessages.add("入力してください");
+		}
+
+		if (errorMessages.size() != 0) {
+			return false;
+		}
+		return true;
 	}
 
 }

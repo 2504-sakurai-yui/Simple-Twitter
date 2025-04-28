@@ -4,7 +4,10 @@ import static chapter6.utils.CloseableUtil.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,7 +91,7 @@ public class MessageDao {
 		}
 	}
 
-	public Message select(Connection connection, Message message) {
+	public List<Message> editSelect(Connection connection, Integer id) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
@@ -102,11 +105,14 @@ public class MessageDao {
 
 			ps = connection.prepareStatement(sql.toString());
 
-			ps.setInt(1, message.getId());
+			ps.setInt(1, id);
 
-			ps.executeQuery();
+			ResultSet rs = ps.executeQuery();
 
-			return (Message) ps;
+			List<Message> messages = toMessages(rs);
+
+			return messages;
+
 
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {
@@ -114,6 +120,29 @@ public class MessageDao {
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
+		}
+	}
+
+	//上のselect(connection,message)へ
+	private List<Message> toMessages(ResultSet rs) throws SQLException {
+
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
+
+		List<Message> messages = new ArrayList<Message>();
+		try {
+			while (rs.next()) {
+				Message message = new Message();
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setCreatedDate(rs.getTimestamp("created_date"));
+				message.setUpdatedDate(rs.getTimestamp("updated_date"));
+
+				messages.add(message);
+			}
+			return messages;
+		} finally {
+			close(rs);
 		}
 	}
 
@@ -126,7 +155,7 @@ public class MessageDao {
 		try {
 			StringBuilder sql = new StringBuilder();
 			sql.append("UPDATE messages SET ");
-			sql.append("    text = ?");
+			sql.append("    text = ? ");
 			sql.append("WHERE id = ?;");
 
 			ps = connection.prepareStatement(sql.toString());
