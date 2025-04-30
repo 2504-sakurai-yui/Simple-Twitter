@@ -26,7 +26,7 @@
 			<form action="edit" method="post"><br />
 				<label for="text">つぶやき</label>
 					<input name="id" id="id" value="${message.id}" type="hidden"/>
-					<textarea name="text" id="text" cols="80" rows="5">${message.text}</textarea><br />
+					<pre><textarea name="text" id="text" cols="80" rows="5">${message.text}</textarea></pre>
 					<input type="submit" value="更新"><br />
 					<a href="./">戻る</a>
 			</form>
