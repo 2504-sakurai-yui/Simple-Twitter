@@ -108,6 +108,10 @@ a.profile .account {
 	font: small-caption;
 }
 
+.text {
+	white-space: pre-wrap;
+}
+
 .copyright {
 	width: 250px;
 	margin: 0 auto;

@@ -3,6 +3,7 @@
 <%@page isELIgnored="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -62,13 +63,14 @@
 							</a>
 							</span> <span class="name"><c:out value="${message.name}" /></span>
 						</div>
-						<div class="text">
-							<c:out value="${message.text}" />
-						</div>
+						<div class="text"><c:out value="${message.text}" /></div>
 						<div class="date">
 							<fmt:formatDate value="${message.createdDate}"
 								pattern="yyyy/MM/dd HH:mm:ss" />
 						</div>
+					</div>
+
+					<c:if test="${ loginUser.id == message.userId }">
 						<div class="delete">
 							<form action="deleteMessage" method="post">
 								<input type="hidden" name="deleteMessage" value="${message.id}"/>
@@ -77,11 +79,12 @@
 						</div>
 						<div class="edit">
 							<form action="edit" method="get">
-								<input type="hidden" name="edit" value="${message.id}"/>
+								<input type="hidden" name="editId" value="${message.id}"/>
 								<input type="submit" value="編集"/>
 							</form>
 						</div>
-					</div>
+					</c:if>
+
 				</c:forEach>
 			</div>
 		</c:if>

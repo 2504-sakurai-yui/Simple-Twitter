@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,11 +89,12 @@ public class MessageDao {
 		}
 	}
 
-	public List<Message> editSelect(Connection connection, Integer id) {
+	public Message editSelect(Connection connection, Integer id) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
+		Message message = null;
 		PreparedStatement ps = null;
 		try {
 			StringBuilder sql = new StringBuilder();
@@ -109,10 +108,15 @@ public class MessageDao {
 
 			ResultSet rs = ps.executeQuery();
 
-			List<Message> messages = toMessages(rs);
+			if (rs.next()) {
+				message = new Message();
+				message.setId(rs.getInt("id"));
+				message.setText(rs.getString("text"));
+				message.setCreatedDate(rs.getTimestamp("created_date"));
+				message.setUpdatedDate(rs.getTimestamp("updated_date"));
+			}
 
-			return messages;
-
+			return message;
 
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {
@@ -120,29 +124,6 @@ public class MessageDao {
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
-		}
-	}
-
-	//上のselect(connection,message)へ
-	private List<Message> toMessages(ResultSet rs) throws SQLException {
-
-		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
-				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
-
-		List<Message> messages = new ArrayList<Message>();
-		try {
-			while (rs.next()) {
-				Message message = new Message();
-				message.setId(rs.getInt("id"));
-				message.setText(rs.getString("text"));
-				message.setCreatedDate(rs.getTimestamp("created_date"));
-				message.setUpdatedDate(rs.getTimestamp("updated_date"));
-
-				messages.add(message);
-			}
-			return messages;
-		} finally {
-			close(rs);
 		}
 	}
 
