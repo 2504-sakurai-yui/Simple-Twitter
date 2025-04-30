@@ -77,12 +77,11 @@ public class EditServlet extends HttpServlet{
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
-		HttpSession session = request.getSession();
 		Message message = getMessage(request);
 		List<String> errorMessages = new ArrayList<String>();
 
 		if (!isValid(message, errorMessages)) {
-			session.setAttribute("errorMessages", errorMessages);
+			request.setAttribute("errorMessages", errorMessages);
 			request.setAttribute("message", message);
 			request.getRequestDispatcher("edit.jsp").forward(request, response);
 			return;
