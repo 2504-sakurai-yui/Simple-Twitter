@@ -17,6 +17,7 @@ import chapter6.dao.UserMessageDao;
 import chapter6.logging.InitApplication;
 
 public class MessageService {
+
 	/**
 	 * ロガーインスタンスの生成
 	 */
@@ -160,7 +161,7 @@ public class MessageService {
 		}
 	}
 
-public void update(Message message) {
+	public void update(Message message) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
