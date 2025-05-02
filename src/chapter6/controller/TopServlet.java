@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import chapter6.beans.User;
 import chapter6.beans.UserComment;
@@ -46,17 +47,26 @@ public class TopServlet extends HttpServlet {
 			isShowMessageForm = true;
 		}
 
-		/*
-		 * String型のuser_idの値をrequest.getParameter("user_id")で
-		 * JSPから受け取るように設定
-		 * MessageServiceのselectに引数としてString型のuser_idを追加
-		 */
+		//開始日
+		String start = request.getParameter("start");
+		//終了日
+		String end = request.getParameter("end");
+
+
 		String userId = request.getParameter("user_id");
-		List<UserMessage> messages = new MessageService().select(userId);
+		List<UserMessage> messages = new MessageService().select(userId, start, end);
 
-		//String messageId = request.getParameter("massage_id");
-		List<UserComment> comments = new CommentService().select(userId);
+		List<UserComment> comments = new CommentService().select();
 
+		//ログインフィルターがかかったとき、セッション無効化
+		HttpSession session = request.getSession();
+		User loginUser = (User) session.getAttribute("loginUser");
+		if(loginUser == null) {
+			session.invalidate();
+		}
+
+		request.setAttribute("start", start);
+		request.setAttribute("end", end);
 		request.setAttribute("comments", comments);
 		request.setAttribute("messages", messages);
 		request.setAttribute("isShowMessageForm", isShowMessageForm);

@@ -9,9 +9,14 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-@WebFilter("/*")
-public class EncodingFilter implements Filter {
+import chapter6.beans.User;
+
+@WebFilter(urlPatterns = {"/setting", "/edit"})
+public class LoginFilter implements Filter {
 
 	public static String INIT_PARAMETER_NAME_ENCODING = "encoding";
 
@@ -27,21 +32,23 @@ public class EncodingFilter implements Filter {
 			request.setCharacterEncoding(encoding);
 		}
 
-		// サーブレットを実行
-		chain.doFilter(request, response);
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+		HttpSession session = httpRequest.getSession();
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if(loginUser != null) {
+			chain.doFilter(request, response); // サーブレットを実行
+		} else {
+			session.setAttribute("errorMessages", "ログインしてください");
+			httpResponse.sendRedirect("login.jsp");
+		}
 
 	}
 
 	@Override
 	public void init(FilterConfig config) {
-		encoding = config.getInitParameter(INIT_PARAMETER_NAME_ENCODING);
-		if (encoding == null) {
-			System.out.println("EncodingFilter# デフォルトのエンコーディング(UTF-8)を利用します。");
-			encoding = DEFAULT_ENCODING;
-		} else {
-			System.out.println("EncodingFilter# 設定されたエンコーディング(" + encoding
-					+ ")を利用します。。");
-		}
 	}
 
 	@Override
