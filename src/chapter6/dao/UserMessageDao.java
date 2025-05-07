@@ -49,7 +49,7 @@ public class UserMessageDao {
 			sql.append("FROM messages ");
 			sql.append("INNER JOIN users ");
 			sql.append("ON messages.user_id = users.id ");
-			sql.append("WHERE messages.created_date >= ? AND messages.created_date <= ? ");
+			sql.append("WHERE messages.created_date BETWEEN ? AND ? ");
 			if(id != null) {
 				sql.append("AND user_id = ? ");
 			}

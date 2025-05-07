@@ -91,13 +91,12 @@ public class MessageService {
 
 			//endが入力されていたとき
 			String endDate = null;
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-			String now = String.valueOf(sdf.format(date));
 			if (!StringUtils.isBlank(end)) {
 				endDate = end + " 23:59:59";
 			} else {
+				Date date = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				String now = String.valueOf(sdf.format(date));
 				endDate = now;
 			}
 

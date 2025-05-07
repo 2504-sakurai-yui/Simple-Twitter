@@ -31,10 +31,22 @@
 				<form action="./" method="get">
 				日付：
 				<input type="date" name="start" value="${start}">
+				～
 				<input type="date" name="end" value="${end}">
 				<input type="submit" value="絞込">
 				</form>
 			</div>
+
+			<c:if test="${ not empty errorMessages }">
+				<div class="errorMessages">
+					<ul>
+						<c:forEach items="${errorMessages}" var="errorMessage">
+							<li><c:out value="${errorMessage}" />
+						</c:forEach>
+					</ul>
+				</div>
+				<c:remove var="errorMessages" scope="session" />
+			</c:if>
 
 			<c:if test="${ not empty loginUser }">
 				<div class="profile">
@@ -122,28 +134,15 @@
 							<div class="comment-box">
 								<form action="comment" method="post">
 									<label for="text">返信</label>
-										<input type="hidden" name="id" id="id" value="${message.id}"/>
-										<pre><textarea name="text" id="text" cols="50" rows="3"></textarea></pre>
-										<input type="submit" value="返信"><br />
+									<input type="hidden" name="id" id="id" value="${message.id}"/>
+									<pre><textarea name="text" id="text" cols="50" rows="3" class="reply-box"></textarea></pre>
+									<input type="submit" value="返信"><br />
 								</form>
 							</div>
 						</c:if>
-
 					</div>
-
 				</c:forEach>
 			</div>
-
-			<c:if test="${ not empty errorMessages }">
-				<div class="errorMessages">
-					<ul>
-						<c:forEach items="${errorMessages}" var="errorMessage">
-							<li><c:out value="${errorMessage}" />
-						</c:forEach>
-					</ul>
-				</div>
-				<c:remove var="errorMessages" scope="session" />
-			</c:if>
 
 			<div class="copyright">Copyright(c)Yui Sakurai</div>
 		</div>

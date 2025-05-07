@@ -42,7 +42,7 @@ public class LoginFilter implements Filter {
 			chain.doFilter(request, response); // サーブレットを実行
 		} else {
 			session.setAttribute("errorMessages", "ログインしてください");
-			httpResponse.sendRedirect("login.jsp");
+			httpResponse.sendRedirect("./login.jsp");
 		}
 
 	}
