@@ -54,7 +54,9 @@ public class CommentServlet extends HttpServlet {
 		}
 
 		//入力された返信内容取得
-		Comment comment = getComment(request);
+		Comment comment = new Comment();
+		comment.setMessageId(Integer.parseInt(request.getParameter("id")));
+		comment.setText(text);
 
 		User user = (User) session.getAttribute("loginUser");
 		comment.setUserId(user.getId());
@@ -65,20 +67,6 @@ public class CommentServlet extends HttpServlet {
 
 		response.sendRedirect("./");
 
-	}
-
-	//新しく入力された返信情報取得
-	private Comment getComment(HttpServletRequest request) throws IOException, ServletException {
-
-		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
-				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
-
-		Comment comment = new Comment();
-		comment.setMessageId(Integer.parseInt(request.getParameter("id")));
-		comment.setText(request.getParameter("text"));
-
-		//新しく入力された返信情報を返す
-		return comment;
 	}
 
 	private boolean isValid(String text, List<String> errorMessages) {

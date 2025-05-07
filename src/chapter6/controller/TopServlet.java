@@ -9,7 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import chapter6.beans.User;
 import chapter6.beans.UserComment;
@@ -52,25 +51,17 @@ public class TopServlet extends HttpServlet {
 		//終了日
 		String end = request.getParameter("end");
 
-
 		String userId = request.getParameter("user_id");
 		List<UserMessage> messages = new MessageService().select(userId, start, end);
 
 		List<UserComment> comments = new CommentService().select();
-
-		//ログインフィルターがかかったとき、セッション無効化
-		HttpSession session = request.getSession();
-		User loginUser = (User) session.getAttribute("loginUser");
-		if(loginUser == null) {
-			session.invalidate();
-		}
 
 		request.setAttribute("start", start);
 		request.setAttribute("end", end);
 		request.setAttribute("comments", comments);
 		request.setAttribute("messages", messages);
 		request.setAttribute("isShowMessageForm", isShowMessageForm);
-		request.getRequestDispatcher("/top.jsp").forward(request,  response);
+		request.getRequestDispatcher("/top.jsp").forward(request, response);
 	}
 
 }
